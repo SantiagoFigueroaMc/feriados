@@ -6,7 +6,7 @@
     <title>Feriados en Vivo</title>
     <style>
         body { font-family: Arial, sans-serif; display: flex; margin: 0; height: 100vh; }
-        aside { width: 220px; background-color: #f4f4f4; padding: 20px; border-right: 1px solid #ccc; box-sizing: border-box; }
+        aside { width: 220px; flex-shrink: none; flex: none; background-color: #f4f4f4; padding: 20px; border-right: 1px solid #ccc; box-sizing: border-box; }
         aside label { display: block; margin-bottom: 10px; cursor: pointer; text-transform: capitalize; }
         main { flex-grow: 1; padding: 20px; display: flex; gap: 20px; overflow-x: auto; background-color: #fafafa; }
         .pais-columna { flex: 1; min-width: 250px; max-width: 350px; background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -60,51 +60,75 @@ checkboxes.forEach(checkbox => {
     });
 });
 
+function getFromLocalStorage({country,year}){
+    const data = localStorage.getItem(`feriados-nacionales:${country}:${year}`)
+    return data ? JSON.parse(data) : null;
+}
+
+function saveToLocalStorage({country,year,data}){
+    localStorage.setItem(`feriados-nacionales:${country}:${year}`, JSON.stringify(data));
+}
+
 // Enrutador de APIs según el país seleccionado
-async function obtenerFeriadosRemotos(codigoPais) {
-    const currentYear = 2026; // Año de consulta requerido
+async function obtenerFeriadosRemotos(codigoPais, year) {
     
+    const localData = getFromLocalStorage({country: codigoPais, year})
+    if (localData) return localData;
+
     try {
         switch (codigoPais) {
             case 'CL': {
                 const res = await fetch('https://api.boostr.cl/holidays.json');
                 const json = await res.json();
-                return json.data.map(f => ({ fecha: formatearFecha(f.date), nombre: f.title }));
+                const data = json.data.map(f => ({ fecha: formatearFecha(f.date), nombre: f.title }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'AR': {
-                const res = await fetch(`https://api.argentinadatos.com/v1/feriados/${currentYear}`);
+                const res = await fetch(`https://api.argentinadatos.com/v1/feriados/${year}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.fecha), nombre: f.nombre }));
+                const data = datos.map(f => ({ fecha: formatearFecha(f.fecha), nombre: f.nombre }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'BR': {
                 // API pública de feriados nacionales brasileños
-                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`);
+                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'CO': {
-                const res = await fetch(`https://calendariosnacionales.com/co/v1/${currentYear}/nacionales.json`);
+                const res = await fetch(`https://calendariosnacionales.com/co/v1/${year}/nacionales.json`);
                 const datos = await res.json();
-                return datos.holidays.map(f => ({
+                const data = datos.holidays.map(f => ({
                     fecha: formatearFecha(f.date),
                     nombre: f.name
                 }));
-                //return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'MX': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/MX/${currentYear}`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/MX/${year}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'PE': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/PE/${currentYear}`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/PE/${year}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             case 'UY': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/UY/${currentYear}`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/UY/${year}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                saveToLocalStorage({country:codigoPais, year, data});
+                return data;
             }
             default:
                 return [];
@@ -137,8 +161,10 @@ async function renderizarColumnas() {
             columna.innerHTML = `<h3>${checkbox.parentElement.textContent.trim()}</h3><p class="loading">Sincronizando suscripción...</p>`;
             contenedor.appendChild(columna);
 
+            const currentYear = new Date().getFullYear();
+
             // Fetch asíncrono
-            const feriados = await obtenerFeriadosRemotos(paisCodigo);
+            const feriados = await obtenerFeriadosRemotos(paisCodigo, currentYear);
             
             const loader = columna.querySelector('.loading');
             if (loader) loader.remove();
