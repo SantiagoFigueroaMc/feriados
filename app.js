@@ -137,9 +137,13 @@ async function renderizarColumnas() {
     for (const checkbox of checkboxes) {
         if (checkbox.checked) {
             const paisCodigo = checkbox.value;
-            const columna = document.createElement('div');
-            columna.classList.add('pais-columna');
             const pais_name = checkbox.parentElement.textContent.trim().replace(/\d{4}\s*-\s*\d{4}/, yearInput.value);
+            let columna = document.getElementById(`${pais_name}`)
+            if (!columna) {
+                columna = document.createElement('div');
+                columna.id=`${pais_name}`;
+                columna.classList.add('pais-columna');
+            }
             columna.innerHTML = `<h3>${pais_name}</h3><p class="loading">Sincronizando suscripción...</p>`;
             contenedor.appendChild(columna);
 
