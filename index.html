@@ -1,48 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feriados en Vivo</title>
     <style>
-        body { font-family: Arial, sans-serif; display: flex; margin: 0; height: 100vh; }
-        aside { width: 220px; flex-shrink: none; flex: none; background-color: #f4f4f4; padding: 20px; border-right: 1px solid #ccc; box-sizing: border-box; }
-        aside label { display: block; margin-bottom: 10px; cursor: pointer; text-transform: capitalize; }
-        main { flex-grow: 1; padding: 20px; display: flex; gap: 20px; overflow-x: auto; background-color: #fafafa; }
-        .pais-columna { flex: 1; min-width: 250px; max-width: 350px; background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .pais-columna h3 { margin-top: 0; border-bottom: 2px solid #0033a0; padding-bottom: 5px; text-transform: capitalize; color: #0033a0; }
-        .pais-columna ul { list-style: none; padding: 0; margin: 0; }
-        .pais-columna li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
-        .badge-irrenunciable { background-color: #d9534f; color: white; font-size: 0.75em; padding: 2px 5px; border-radius: 3px; float: right; }
-        .loading { color: #666; font-style: italic; }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            height: 100vh;
+        }
+
+        aside {
+            width: 230px;
+            flex-shrink: none;
+            flex: none;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        aside label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-transform: capitalize;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            overflow-y: auto;
+            /* Cambiado de overflow-x a overflow-y para permitir scroll vertical */
+            align-items: flex-start;
+            /* Evita que las tarjetas se estiren a la fuerza hasta el fondo */
+            background-color: #fafafa;
+        }
+
+        small {
+            display: block;
+            justify-self: end;
+        }
+
+        .pais-columna {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pais-columna {
+            width: 100%;
+            /* O un ancho fijo si deseas mantener el diseño de columnas */
+            min-width: 250px;
+            max-width: 350px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: max-content;
+            /* Fuerza a la tarjeta a crecer exactamente lo que mida su contenido */
+        }
+
+        .pais-columna ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pais-columna li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+
+        .badge-irrenunciable {
+            background-color: #d9534f;
+            color: white;
+            font-size: 0.75em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            float: right;
+        }
+
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+
+    <style>
+        /* Contenedor Label (Estructura principal) */
+        label[for="year-input"] {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 8px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333333;
+            cursor: pointer;
+            width: 120px;
+            /* Tamaño ideal para un año de 4 dígitos */
+        }
+
+        /* Campo de Entrada (Input) */
+        #year-input {
+            padding: 10px 14px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Estado de Enfoque (Focus) */
+        #year-input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Ocultar las flechas nativas de incremento/decremento (Opcional) */
+        #year-input::-webkit-outer-spin-button,
+        #year-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        #year-input {
+            -moz-appearance: textfield;
+            /* Para Firefox */
+        }
     </style>
 </head>
+
 <body>
 
     <aside>
         <h2>Países</h2>
+        <label for="year-input">
+            Año: <input type="number" name="year" id="year-input">
+            <small id="year-ranges">2000 - 2050</small>
+        </label>
         <label for="ar-chkbx">
-            <input type="checkbox" name="Paises" id="ar-chkbx" value="AR"> Argentina 🇦🇷
+            <input type="checkbox" name="Paises" id="ar-chkbx" value="AR">
+            Argentina 🇦🇷
+            <small id="ar-year-ranges"></small>
         </label>
         <label for="br-chkbx">
             <input type="checkbox" name="Paises" id="br-chkbx" value="BR"> Brasil 🇧🇷
+            <small id="br-year-ranges"></small>
         </label>
         <label for="cl-chkbx">
             <input type="checkbox" name="Paises" id="cl-chkbx" value="CL"> Chile 🇨🇱
+            <small id="cl-year-ranges"></small>
         </label>
         <label for="co-chkbx">
             <input type="checkbox" name="Paises" id="co-chkbx" value="CO"> Colombia 🇨🇴
+            <small id="co-year-ranges"></small>
         </label>
         <label for="mx-chkbx">
             <input type="checkbox" name="Paises" id="mx-chkbx" value="MX"> México 🇲🇽
+            <small id="mx-year-ranges"></small>
         </label>
         <label for="pe-chkbx">
             <input type="checkbox" name="Paises" id="pe-chkbx" value="PE"> Perú 🇵🇪
+            <small id="pe-year-ranges"></small>
         </label>
         <label for="uy-chkbx">
             <input type="checkbox" name="Paises" id="uy-chkbx" value="UY"> Uruguay 🇺🇾
+            <small id="uy-year-ranges"></small>
         </label>
-        <p style="font-size: 0.8em; color: #666; margin-top: 20px;">Nota: Feriados del 2026.</p>
     </aside>
 
     <main id="feriados-contenedor">
@@ -50,140 +190,168 @@
     </main>
 
     <script>
+        const current_year = new Date().getFullYear();
+        const MIN_YEAR = current_year - 10;
+        const MAX_YEAR = current_year + 9;
+        document.querySelector("small#year-ranges").innerText = `${MIN_YEAR} - ${MAX_YEAR}`;
+        document.querySelector("small#ar-year-ranges").innerText = `${current_year - 6} - ${current_year + 1}`;
+        document.querySelector("small#br-year-ranges").innerText = `${current_year - 10} - ${current_year + 9}`;
+        document.querySelector("small#cl-year-ranges").innerText = `${current_year - 10} - ${current_year + 9}`;
+        document.querySelector("small#co-year-ranges").innerText = `${current_year - 2} - ${current_year + 1}`;
+        document.querySelector("small#mx-year-ranges").innerText = `${current_year - 2} - ${current_year + 6}`;
+        document.querySelector("small#pe-year-ranges").innerText = `${current_year - 2} - ${current_year + 6}`;
+        document.querySelector("small#uy-year-ranges").innerText = `${current_year - 2} - ${current_year + 6}`;
+
         const contenedor = document.getElementById('feriados-contenedor');
-const checkboxes = document.querySelectorAll('input[name="Paises"]');
+        const checkboxes = document.querySelectorAll('input[name="Paises"]');
+        const yearInput = document.querySelector('input[name="year"]');
+        yearInput.value = new Date().getFullYear();
 
-// Escuchar cambios en los checkboxes
-checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        renderizarColumnas();
-    });
-});
+        // Escuchar cambios en los checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                renderizarColumnas();
+            });
+        });
 
-function getFromLocalStorage({country,year}){
-    const data = localStorage.getItem(`feriados-nacionales:${country}:${year}`)
-    return data ? JSON.parse(data) : null;
-}
-
-function saveToLocalStorage({country,year,data}){
-    localStorage.setItem(`feriados-nacionales:${country}:${year}`, JSON.stringify(data));
-}
-
-// Enrutador de APIs según el país seleccionado
-async function obtenerFeriadosRemotos(codigoPais, year) {
-    
-    const localData = getFromLocalStorage({country: codigoPais, year})
-    if (localData) return localData;
-
-    try {
-        switch (codigoPais) {
-            case 'CL': {
-                const res = await fetch('https://api.boostr.cl/holidays.json');
-                const json = await res.json();
-                const data = json.data.map(f => ({ fecha: formatearFecha(f.date), nombre: f.title }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'AR': {
-                const res = await fetch(`https://api.argentinadatos.com/v1/feriados/${year}`);
-                const datos = await res.json();
-                const data = datos.map(f => ({ fecha: formatearFecha(f.fecha), nombre: f.nombre }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'BR': {
-                // API pública de feriados nacionales brasileños
-                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
-                const datos = await res.json();
-                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'CO': {
-                const res = await fetch(`https://calendariosnacionales.com/co/v1/${year}/nacionales.json`);
-                const datos = await res.json();
-                const data = datos.holidays.map(f => ({
-                    fecha: formatearFecha(f.date),
-                    nombre: f.name
-                }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'MX': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/MX/${year}`);
-                const datos = await res.json();
-                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'PE': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/PE/${year}`);
-                const datos = await res.json();
-                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            case 'UY': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/UY/${year}`);
-                const datos = await res.json();
-                const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
-                saveToLocalStorage({country:codigoPais, year, data});
-                return data;
-            }
-            default:
-                return [];
+        function getFromLocalStorage({ country, year }) {
+            const data = localStorage.getItem(`feriados-nacionales:${country}:${year}`)
+            return data ? JSON.parse(data) : null;
         }
-    } catch (error) {
-        console.error(`Error consultando calendario de ${codigoPais}:`, error);
-        return null; // Controla errores de red individuales
-    }
-}
 
-// Formateador universal de fechas (Ej: "2026-05-01" -> "1 may")
-function formatearFecha(fechaString) {
-    if (!fechaString) return "";
-    const opciones = { day: 'numeric', month: 'short' };
-    const fecha = new Date(fechaString + 'T00:00:00');
-    return fecha.toLocaleDateString('es-ES', opciones);
-}
+        function saveToLocalStorage({ country, year, data }) {
+            localStorage.setItem(`feriados-nacionales:${country}:${year}`, JSON.stringify(data));
+        }
 
-// Renderizador dinámico de la interfaz
-async function renderizarColumnas() {
-    contenedor.innerHTML = ''; 
+        function loadSettingsFromLocalStorage() { }
+        function saveSettingsToLocalStorage() { }
 
-    for (const checkbox of checkboxes) {
-        if (checkbox.checked) {
-            const paisCodigo = checkbox.value;
-            
-            // Inyectar contenedor visual intermedio (Skeleton loader)
-            const columna = document.createElement('div');
-            columna.classList.add('pais-columna');
-            columna.innerHTML = `<h3>${checkbox.parentElement.textContent.trim()}</h3><p class="loading">Sincronizando suscripción...</p>`;
-            contenedor.appendChild(columna);
+        function onYearInputChange(e) {
+            let val = Number(e.target.value);
+            if (val < MIN_YEAR) val = MIN_YEAR;
+            if (val > MAX_YEAR) val = MAX_YEAR;
 
-            const currentYear = new Date().getFullYear();
+            yearInput.value = val;
 
-            // Fetch asíncrono
-            const feriados = await obtenerFeriadosRemotos(paisCodigo, currentYear);
-            
-            const loader = columna.querySelector('.loading');
-            if (loader) loader.remove();
+            renderizarColumnas();
+        }
 
-            if (!feriados || feriados.length === 0) {
-                columna.innerHTML += `<p style="color:red; font-size:0.85em;">Error al conectar con la suscripción del país.</p>`;
-            } else {
-                const lista = document.createElement('ul');
-                feriados.forEach(f => {
-                    const item = document.createElement('li');
-                    item.innerHTML = `<strong>${f.fecha}</strong> - ${f.nombre}`;
-                    lista.appendChild(item);
-                });
-                columna.appendChild(lista);
+        // Enrutador de APIs según el país seleccionado
+        async function obtenerFeriadosRemotos(codigoPais, year) {
+
+            const localData = getFromLocalStorage({ country: codigoPais, year })
+            if (localData) return localData;
+
+            try {
+                switch (codigoPais) {
+                    case 'CL': {
+                        const res = await fetch('https://api.boostr.cl/holidays.json');
+                        const json = await res.json();
+                        const data = json.data.map(f => ({ fecha: formatearFecha(f.date), nombre: f.title }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'AR': {
+                        const res = await fetch(`https://api.argentinadatos.com/v1/feriados/${year}`);
+                        const datos = await res.json();
+                        const data = datos.map(f => ({ fecha: formatearFecha(f.fecha), nombre: f.nombre }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'BR': {
+                        // API pública de feriados nacionales brasileños
+                        const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${year}`);
+                        const datos = await res.json();
+                        const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'CO': {
+                        const res = await fetch(`https://calendariosnacionales.com/co/v1/${year}/nacionales.json`);
+                        const datos = await res.json();
+                        const data = datos.holidays.map(f => ({
+                            fecha: formatearFecha(f.date),
+                            nombre: f.name
+                        }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'MX': {
+                        const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/MX/${year}`);
+                        const datos = await res.json();
+                        const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'PE': {
+                        const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/PE/${year}`);
+                        const datos = await res.json();
+                        const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    case 'UY': {
+                        const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/UY/${year}`);
+                        const datos = await res.json();
+                        const data = datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+                        saveToLocalStorage({ country: codigoPais, year, data });
+                        return data;
+                    }
+                    default:
+                        return [];
+                }
+            } catch (error) {
+                console.error(`Error consultando calendario de ${codigoPais}:`, error);
+                return null; // Controla errores de red individuales
             }
         }
-    }
-}
 
+        // Formateador universal de fechas (Ej: "2026-05-01" -> "1 may")
+        function formatearFecha(fechaString) {
+            if (!fechaString) return "";
+            const opciones = { day: 'numeric', month: 'short' };
+            const fecha = new Date(fechaString + 'T00:00:00');
+            return fecha.toLocaleDateString('es-ES', opciones);
+        }
+
+        // Renderizador dinámico de la interfaz
+        async function renderizarColumnas() {
+            contenedor.innerHTML = '';
+
+            for (const checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    const paisCodigo = checkbox.value;
+
+                    // Inyectar contenedor visual intermedio (Skeleton loader)
+                    const columna = document.createElement('div');
+                    columna.classList.add('pais-columna');
+                    const pais_name = checkbox.parentElement.textContent.trim().replace(/\d{4}\s*-\s*\d{4}/, yearInput.value);
+                    columna.innerHTML = `<h3>${pais_name}</h3><p class="loading">Sincronizando suscripción...</p>`;
+                    contenedor.appendChild(columna);
+
+                    // Fetch asíncrono
+                    const feriados = await obtenerFeriadosRemotos(paisCodigo, yearInput.value);
+
+                    const loader = columna.querySelector('.loading');
+                    if (loader) loader.remove();
+
+                    if (!feriados || feriados.length === 0) {
+                        columna.innerHTML += `<p style="color:red; font-size:0.85em;">Error al conectar con la suscripción del país.</p>`;
+                    } else {
+                        const lista = document.createElement('ul');
+                        feriados.forEach(f => {
+                            const item = document.createElement('li');
+                            item.innerHTML = `<strong>${f.fecha}</strong> - ${f.nombre}`;
+                            lista.appendChild(item);
+                        });
+                        columna.appendChild(lista);
+                    }
+                }
+            }
+        }
+
+        yearInput.addEventListener("change", onYearInputChange);
     </script>
 </body>
+
 </html>
