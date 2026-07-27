@@ -4,137 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feriados en Vivo</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      margin: 0;
-      height: 100vh;
-    }
-    aside {
-      width: 230px;
-      flex-shrink: none;
-      flex: none;
-      background-color: #f4f4f4;
-      padding: 20px;
-      border-right: 1px solid #ccc;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-    }
-    aside label {
-      display: block;
-      margin-bottom: 10px;
-      cursor: pointer;
-      text-transform: capitalize;
-      user-select: none;
-    }
-    main {
-      flex-grow: 1;
-      padding: 20px;
-      display: flex;
-      gap: 20px;
-      overflow-y: auto;
-      align-items: flex-start;
-      background-color: #fafafa;
-    }
-    small {
-      display: block;
-      justify-self: end;
-    }
-    .pais-columna {
-      width: 100%;
-      min-width: 250px;
-      max-width: 350px;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      height: max-content;
-    }
-    .pais-columna ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .pais-columna li {
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 0.9em;
-    }
-    .badge-irrenunciable {
-      background-color: #d9534f;
-      color: white;
-      font-size: 0.75em;
-      padding: 2px 5px;
-      border-radius: 3px;
-      float: right;
-    }
-    .loading {
-      color: #666;
-      font-style: italic;
-    }
-    
-    /* Estilos del Botón de Exportar */
-    .btn-exportar {
-      margin-top: auto;
-      padding: 12px;
-      background-color: #1f7246;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-exportar:hover {
-      background-color: #13482c;
-    }
-    .btn-exportar:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-  </style>
-  <style>
-    label[for="year-input"] {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 8px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333333;
-      cursor: pointer;
-      width: 120px;
-    }
-    #year-input {
-      padding: 10px 14px;
-      font-size: 16px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      background-color: #ffffff;
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    #year-input:focus {
-      border-color: #4a90e2;
-      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-    }
-    #year-input::-webkit-outer-spin-button, #year-input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    #year-input {
-      -moz-appearance: textfield;
-    }
-  </style>
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <aside>
@@ -171,6 +42,19 @@
   <main id="feriados-contenedor">
     <!-- Las columnas dinámicas aparecerán aquí -->
   </main>
+
+  <footer>
+    <h3>Origen de datos:</h3>
+    <ul>
+      <li><a href="https://api.argentinadatos.com">Argentina</a></li>
+      <li><a href="https://brasilapi.com.br">Brasil</a></li>
+      <li><a href="https://api.boostr.cl">Chile</a></li>
+      <li><a href="https://calendariosnacionales.com">Colombia</a></li>
+      <li><a href="https://nagerholidays.com">México</a></li>
+      <li><a href="https://nagerholidays.com">Perú</a></li>
+      <li><a href="https://nagerholidays.com">Uruguay</a></li>
+    </ul>
+  </footer>
 
   <!-- Vinculación del script externo -->
   <script src="app.js"></script>
