@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
 
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <aside>
     <h2>Países</h2>
@@ -36,6 +38,19 @@
       <input type="checkbox" name="Paises" id="uy-chkbx" value="UY"> Uruguay 🇺🇾 <small id="uy-year-ranges"></small>
     </label>
     
+    <footer>
+      <h3>Origen de datos:</h3>
+      <ul>
+        <li><a target="_blank" rel="noopener" href="https://api.argentinadatos.com">Argentina</a></li>
+        <li><a target="_blank" rel="noopener" href="https://brasilapi.com.br">Brasil</a></li>
+        <li><a target="_blank" rel="noopener" href="https://api.boostr.cl">Chile</a></li>
+        <li><a target="_blank" rel="noopener" href="https://calendariosnacionales.com">Colombia</a></li>
+        <li><a target="_blank" rel="noopener" href="https://nagerholidays.com">México</a></li>
+        <li><a target="_blank" rel="noopener" href="https://nagerholidays.com">Perú</a></li>
+        <li><a target="_blank" rel="noopener" href="https://nagerholidays.com">Uruguay</a></li>
+      </ul>
+    </footer>
+
     <button id="btn-exportar" class="btn-exportar" disabled>Exportar a Excel 📊</button>
   </aside>
 
@@ -43,20 +58,9 @@
     <!-- Las columnas dinámicas aparecerán aquí -->
   </main>
 
-  <footer>
-    <h3>Origen de datos:</h3>
-    <ul>
-      <li><a href="https://api.argentinadatos.com">Argentina</a></li>
-      <li><a href="https://brasilapi.com.br">Brasil</a></li>
-      <li><a href="https://api.boostr.cl">Chile</a></li>
-      <li><a href="https://calendariosnacionales.com">Colombia</a></li>
-      <li><a href="https://nagerholidays.com">México</a></li>
-      <li><a href="https://nagerholidays.com">Perú</a></li>
-      <li><a href="https://nagerholidays.com">Uruguay</a></li>
-    </ul>
-  </footer>
 
   <!-- Vinculación del script externo -->
   <script src="app.js"></script>
 </body>
+
 </html>

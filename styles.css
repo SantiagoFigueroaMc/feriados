@@ -80,7 +80,8 @@ small {
 
 /* Estilos del Botón de Exportar */
 .btn-exportar {
-    margin-top: auto;
+    margin-top: 15px;
+    /* Cambiado de auto para dar espacio al footer encima */
     padding: 12px;
     background-color: #1f7246;
     color: white;
@@ -141,4 +142,46 @@ label[for="year-input"] {
 
 #year-input {
     -moz-appearance: textfield;
+}
+
+/* NÚCLEO: Estilos para el Footer integrados al Aside */
+footer {
+    margin-top: auto;
+    /* Empuja el footer y el botón hacia la parte inferior del aside */
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+footer h3 {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px 0;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    /* Separación compacta para los enlaces */
+}
+
+footer li {
+    font-size: 12px;
+}
+
+footer a {
+    color: #4a90e2;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: #1f7246;
+    /* Combina con el color de tu botón de exportar */
+    text-decoration: underline;
 }
