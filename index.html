@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feriados en Vivo</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; margin: 0; height: 100vh; }
+        aside { width: 220px; background-color: #f4f4f4; padding: 20px; border-right: 1px solid #ccc; box-sizing: border-box; }
+        aside label { display: block; margin-bottom: 10px; cursor: pointer; text-transform: capitalize; }
+        main { flex-grow: 1; padding: 20px; display: flex; gap: 20px; overflow-x: auto; background-color: #fafafa; }
+        .pais-columna { flex: 1; min-width: 250px; max-width: 350px; background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .pais-columna h3 { margin-top: 0; border-bottom: 2px solid #0033a0; padding-bottom: 5px; text-transform: capitalize; color: #0033a0; }
+        .pais-columna ul { list-style: none; padding: 0; margin: 0; }
+        .pais-columna li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
+        .badge-irrenunciable { background-color: #d9534f; color: white; font-size: 0.75em; padding: 2px 5px; border-radius: 3px; float: right; }
+        .loading { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <h2>Países</h2>
+        <label for="ar-chkbx">
+            <input type="checkbox" name="Paises" id="ar-chkbx" value="AR"> Argentina 🇦🇷
+        </label>
+        <label for="br-chkbx">
+            <input type="checkbox" name="Paises" id="br-chkbx" value="BR"> Brasil 🇧🇷
+        </label>
+        <label for="cl-chkbx">
+            <input type="checkbox" name="Paises" id="cl-chkbx" value="CL"> Chile 🇨🇱
+        </label>
+        <label for="co-chkbx">
+            <input type="checkbox" name="Paises" id="co-chkbx" value="CO"> Colombia 🇨🇴
+        </label>
+        <label for="mx-chkbx">
+            <input type="checkbox" name="Paises" id="mx-chkbx" value="MX"> México 🇲🇽
+        </label>
+        <label for="pe-chkbx">
+            <input type="checkbox" name="Paises" id="pe-chkbx" value="PE"> Perú 🇵🇪
+        </label>
+        <label for="uy-chkbx">
+            <input type="checkbox" name="Paises" id="uy-chkbx" value="UY"> Uruguay 🇺🇾
+        </label>
+        <p style="font-size: 0.8em; color: #666; margin-top: 20px;">Nota: Feriados del 2026.</p>
+    </aside>
+
+    <main id="feriados-contenedor">
+        <!-- Las columnas dinámicas aparecerán aquí -->
+    </main>
+
+    <script>
+        const contenedor = document.getElementById('feriados-contenedor');
+const checkboxes = document.querySelectorAll('input[name="Paises"]');
+
+// Escuchar cambios en los checkboxes
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        renderizarColumnas();
+    });
+});
+
+// Enrutador de APIs según el país seleccionado
+async function obtenerFeriadosRemotos(codigoPais) {
+    const currentYear = 2026; // Año de consulta requerido
+    
+    try {
+        switch (codigoPais) {
+            case 'CL': {
+                const res = await fetch('https://api.boostr.cl/holidays.json');
+                const json = await res.json();
+                return json.data.map(f => ({ fecha: formatearFecha(f.date), nombre: f.title }));
+            }
+            case 'AR': {
+                const res = await fetch(`https://api.argentinadatos.com/v1/feriados/${currentYear}`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.fecha), nombre: f.nombre }));
+            }
+            case 'BR': {
+                // API pública de feriados nacionales brasileños
+                const res = await fetch(`https://brasilapi.com.br/api/feriados/v1/${currentYear}`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
+            }
+            case 'CO': {
+                const res = await fetch(`https://nager.at/${currentYear}/CO`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+            }
+            case 'MX': {
+                const res = await fetch(`https://nager.at/${currentYear}/MX`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+            }
+            case 'PE': {
+                const res = await fetch(`https://nager.at/${currentYear}/PE`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+            }
+            case 'UY': {
+                const res = await fetch(`https://nager.at/${currentYear}/UY`);
+                const datos = await res.json();
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+            }
+            default:
+                return [];
+        }
+    } catch (error) {
+        console.error(`Error consultando calendario de ${codigoPais}:`, error);
+        return null; // Controla errores de red individuales
+    }
+}
+
+// Formateador universal de fechas (Ej: "2026-05-01" -> "1 may")
+function formatearFecha(fechaString) {
+    if (!fechaString) return "";
+    const opciones = { day: 'numeric', month: 'short' };
+    const fecha = new Date(fechaString + 'T00:00:00');
+    return fecha.toLocaleDateString('es-ES', opciones);
+}
+
+// Renderizador dinámico de la interfaz
+async function renderizarColumnas() {
+    contenedor.innerHTML = ''; 
+
+    for (const checkbox of checkboxes) {
+        if (checkbox.checked) {
+            const paisCodigo = checkbox.value;
+            
+            // Inyectar contenedor visual intermedio (Skeleton loader)
+            const columna = document.createElement('div');
+            columna.classList.add('pais-columna');
+            columna.innerHTML = `<h3>${checkbox.parentElement.textContent.trim()}</h3><p class="loading">Sincronizando suscripción...</p>`;
+            contenedor.appendChild(columna);
+
+            // Fetch asíncrono
+            const feriados = await obtenerFeriadosRemotos(paisCodigo);
+            
+            const loader = columna.querySelector('.loading');
+            if (loader) loader.remove();
+
+            if (!feriados || feriados.length === 0) {
+                columna.innerHTML += `<p style="color:red; font-size:0.85em;">Error al conectar con la suscripción del país.</p>`;
+            } else {
+                const lista = document.createElement('ul');
+                feriados.forEach(f => {
+                    const item = document.createElement('li');
+                    item.innerHTML = `<strong>${f.fecha}</strong> - ${f.nombre}`;
+                    lista.appendChild(item);
+                });
+                columna.appendChild(lista);
+            }
+        }
+    }
+}
+
+    </script>
+</body>
+</html>
