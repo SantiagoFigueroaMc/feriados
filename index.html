@@ -83,24 +83,28 @@ async function obtenerFeriadosRemotos(codigoPais) {
                 return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
             }
             case 'CO': {
-                const res = await fetch(`https://nager.at/${currentYear}/CO`);
+                const res = await fetch(`https://calendariosnacionales.com/co/v1/${currentYear}/nacionales.json`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+                return datos.holidays.map(f => ({
+                    fecha: formatearFecha(f.date),
+                    nombre: f.name
+                }));
+                //return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
             }
             case 'MX': {
-                const res = await fetch(`https://nager.at/${currentYear}/MX`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/MX/${currentYear}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
             }
             case 'PE': {
-                const res = await fetch(`https://nager.at/${currentYear}/PE`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/PE/${currentYear}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
             }
             case 'UY': {
-                const res = await fetch(`https://nager.at/${currentYear}/UY`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/UY/${currentYear}`);
                 const datos = await res.json();
-                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.localName }));
+                return datos.map(f => ({ fecha: formatearFecha(f.date), nombre: f.name }));
             }
             default:
                 return [];
