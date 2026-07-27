@@ -23,7 +23,13 @@ let datosFeriadosActuales = {};
 yearInput.value = new Date().getFullYear();
 
 checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
+    checkbox.addEventListener('change', (e) => {
+        g4_event({
+            'event': 'country_checkbox_input_change',
+            'country': e.target.value,
+            'selected': e.target.selected,
+        });
+        
         renderizarColumnas();
     });
 });
@@ -39,6 +45,12 @@ function saveToLocalStorage({ country, year, data }) {
 
 function onYearInputChange(e) {
     let val = Number(e.target.value);
+
+    g4_event({
+        'event': 'year_input_change',
+        'year': val,
+    });
+
     if (val < MIN_YEAR) val = MIN_YEAR;
     if (val > MAX_YEAR) val = MAX_YEAR;
     yearInput.value = val;
@@ -50,6 +62,12 @@ async function obtenerFeriadosRemotos(codigoPais, year) {
 
     const localData = getFromLocalStorage({ country: codigoPais, year })
     if (localData) return localData;
+
+    g4_event({
+        'event': 'fetch_feriados',
+        'contry': codigoPais,
+        'year': year,
+    });
 
     try {
         switch (codigoPais) {
@@ -172,6 +190,11 @@ async function renderizarColumnas() {
     btnExportar.disabled = !tieneDatos;
 }
 
+function g4_event(event_details){
+window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(event_details);
+}
+
 function exportarAExcel() {
     if (Object.keys(datosFeriadosActuales).length === 0) return;
 
@@ -190,6 +213,13 @@ function exportarAExcel() {
     const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), contenidoCsv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
+
+    g4_event({
+        'event': 'descargar_excel',
+        'countries': Object.keys(datosFeriadosActuales),
+        'year': yearInput.value,
+    })
+
 
     link.setAttribute("href", url);
     link.setAttribute("download", `Feriados_${yearInput.value}.csv`);
