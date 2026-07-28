@@ -94,7 +94,7 @@ async function obtenerFeriadosRemotos(codigoPais, year) {
                 return data;
             }
             case 'CO': {
-                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/CO${year}`);
+                const res = await fetch(`https://nagerholidays.com/api/v4/Holidays/CO/${year}`);
                 const datos = await res.json();
                 const data = datos.map(f => ({ fecha: f.date, nombre: f.name }));
                 saveToLocalStorage({ country: codigoPais, year, data });
