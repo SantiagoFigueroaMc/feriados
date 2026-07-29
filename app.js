@@ -65,7 +65,7 @@ async function obtenerFeriadosRemotos(codigoPais, year) {
 
     g4_event({
         'event': 'fetch_feriados',
-        'contry': codigoPais,
+        'country': codigoPais,
         'year': year,
     });
 
