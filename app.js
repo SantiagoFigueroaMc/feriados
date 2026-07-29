@@ -27,7 +27,7 @@ checkboxes.forEach(checkbox => {
         g4_event({
             'event': 'country_checkbox_input_change',
             'country': e.target.value,
-            'selected': e.target.selected,
+            'selected': e.target.checked,
         });
         
         renderizarColumnas();
